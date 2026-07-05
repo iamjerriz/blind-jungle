@@ -127,7 +127,12 @@ export function useGameScreen() {
             newBoard[index] = moving;
             newBoard[selectedIndex] = null;
           } else if (target.isRevealed && target.owner !== currentPlayer) {
-            if (canCapture(moving.tier, target.tier)) {
+            if (moving.tier === target.tier) {
+              newBoard[index] = null;
+              newBoard[selectedIndex] = null;
+              setMessage(`Both ${ANIMALS[moving.tier].name}s eliminated!`);
+              setTimeout(() => setMessage(null), 1500);
+            } else if (canCapture(moving.tier, target.tier)) {
               newBoard[index] = moving;
               newBoard[selectedIndex] = null;
               setMessage(`${ANIMALS[moving.tier].name} captures ${ANIMALS[target.tier].name}!`);
