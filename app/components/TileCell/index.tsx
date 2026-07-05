@@ -1,7 +1,7 @@
 'use client';
 
 import { Tile } from '../../lib/types';
-import { ANIMALS } from '../../lib/gameLogic';
+import { ANIMAL_GIFS } from '../../lib/animalAssets';
 
 interface Props {
   tile: Tile | null;
@@ -27,7 +27,9 @@ export default function TileCell({ tile, isSelected, isValidTarget, onClick }: P
         `}
         style={{
           background: 'linear-gradient(145deg, #f5c842, #d4960a)',
-          boxShadow: isValidTarget ? '0 0 0 3px #4ade80, 0 4px 12px rgba(0,0,0,0.3)' : '0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3)',
+          boxShadow: isValidTarget
+            ? '0 0 0 3px #4ade80, 0 4px 12px rgba(0,0,0,0.3)'
+            : '0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3)',
         }}
       >
         <div
@@ -43,33 +45,40 @@ export default function TileCell({ tile, isSelected, isValidTarget, onClick }: P
     );
   }
 
-  const animal = ANIMALS[tile.tier];
   const isPlayerA = tile.owner === 'A';
+  const borderColor = isPlayerA ? '#ef4444' : '#3b82f6';
 
   return (
     <button
       onClick={onClick}
       className={`
-        w-20 h-20 rounded-2xl flex flex-col items-center justify-center gap-0.5 cursor-pointer
-        transition-all duration-150 active:scale-95 relative
+        w-20 h-20 rounded-2xl cursor-pointer
+        transition-all duration-150 active:scale-95 relative overflow-hidden
         ${isSelected ? 'ring-4 ring-yellow-400 ring-offset-2 scale-105' : ''}
         ${isValidTarget ? 'ring-4 ring-green-400 ring-offset-2' : ''}
         shadow-md hover:shadow-lg hover:-translate-y-0.5
       `}
       style={{
         background: isPlayerA ? 'linear-gradient(145deg, #ffd6d6, #ffb3b3)' : 'linear-gradient(145deg, #d6e8ff, #b3d1ff)',
+        border: `3px solid ${borderColor}`,
         boxShadow: isSelected
-          ? '0 0 0 3px #fbbf24, 0 4px 12px rgba(0,0,0,0.3)'
+          ? `0 0 0 3px #fbbf24, 0 4px 12px rgba(0,0,0,0.3)`
           : isValidTarget
             ? '0 0 0 3px #4ade80, 0 4px 12px rgba(0,0,0,0.3)'
             : '0 4px 12px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.6)',
       }}
     >
-      <span className='text-3xl leading-none'>{animal.emoji}</span>
+      <img
+        src={ANIMAL_GIFS[tile.tier]}
+        alt=""
+        className="w-full h-full object-contain"
+        style={{ mixBlendMode: 'multiply' }}
+        draggable={false}
+      />
       <div
-        className='absolute bottom-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white'
+        className='absolute bottom-1 right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white'
         style={{
-          background: isPlayerA ? '#ef4444' : '#3b82f6',
+          background: borderColor,
           boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
         }}
       >
