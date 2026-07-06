@@ -1,7 +1,7 @@
 'use client';
 
 import { Tile } from '../../lib/types';
-import { ANIMAL_GIFS } from '../../lib/animalAssets';
+import { getAnimalImage } from '../../lib/animalAssets';
 
 interface Props {
   tile: Tile | null;
@@ -51,24 +51,28 @@ export default function TileCell({ tile, isSelected, isValidTarget, onClick }: P
       onClick={onClick}
       className={`
         w-20 h-20 rounded-2xl cursor-pointer
-        transition-all duration-150 active:scale-95 relative overflow-hidden
+        transition-all duration-150 active:scale-95 relative overflow-visible
         ${isSelected ? 'ring-4 ring-yellow-400 ring-offset-2 scale-105' : ''}
         ${isValidTarget ? 'ring-4 ring-green-400 ring-offset-2' : ''}
-        shadow-md hover:shadow-lg hover:-translate-y-0.5
+        hover:-translate-y-0.5
       `}
       style={{
-        background: '#ffffff',
+        border: `2px solid ${badgeColor}40`,
         boxShadow: isSelected
-          ? '0 0 0 3px #fbbf24, 0 4px 12px rgba(0,0,0,0.3)'
+          ? '0 0 0 3px #fbbf24'
           : isValidTarget
-            ? '0 0 0 3px #4ade80, 0 4px 12px rgba(0,0,0,0.3)'
-            : '0 4px 12px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.6)',
+            ? '0 0 0 3px #4ade80'
+            : undefined,
       }}
     >
       <img
-        src={ANIMAL_GIFS[tile.tier]}
+        src={getAnimalImage(tile.tier, tile.owner)}
         alt=""
-        className="w-full h-full object-contain"
+        className="w-full h-full object-contain animate-piece-bob"
+        style={{
+          animationDelay: `${(tile.id % 8) * 0.15}s`,
+          filter: 'drop-shadow(0 6px 6px rgba(0,0,0,0.35))',
+        }}
         draggable={false}
       />
       <div

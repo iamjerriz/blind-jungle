@@ -1,12 +1,21 @@
-import { AnimalTier } from './types';
+import { AnimalTier, Player } from './types';
 
-export const ANIMAL_GIFS: Record<AnimalTier, string> = {
-  1: '/animals/mouse.gif',
-  2: '/animals/cat.gif',
-  3: '/animals/rabbit.gif',
-  4: '/animals/pig.gif',
-  5: '/animals/fox.gif',
-  6: '/animals/tiger.gif',
-  7: '/animals/leo.gif',
-  8: '/animals/elephant.gif',
+const ANIMAL_KEYS: Record<AnimalTier, string> = {
+  1: 'mouse',
+  2: 'cat',
+  3: 'bunny',
+  4: 'pig',
+  5: 'wolf',
+  6: 'tiger',
+  7: 'lion',
+  8: 'elephant',
 };
+
+// These two only have a blue-platform cutout so far; fall back to it for both owners.
+const BLUE_ONLY: ReadonlySet<AnimalTier> = new Set([4, 5]);
+
+export function getAnimalImage(tier: AnimalTier, owner: Player): string {
+  const key = ANIMAL_KEYS[tier];
+  const variant = owner === 'A' && !BLUE_ONLY.has(tier) ? 'red' : 'blue';
+  return `/animals/${key}${variant}.webp`;
+}

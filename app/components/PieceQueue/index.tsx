@@ -1,6 +1,6 @@
 'use client';
 
-import { ANIMAL_GIFS } from '../../lib/animalAssets';
+import { getAnimalImage } from '../../lib/animalAssets';
 import { TIERS } from './constants';
 
 export default function PieceQueue() {
@@ -9,7 +9,7 @@ export default function PieceQueue() {
       {TIERS.map((tier) => (
         <div key={tier} className='flex flex-col items-center gap-0.5'>
           <div className='w-10 h-10 rounded-xl flex items-center justify-center shadow-sm overflow-hidden' style={{ background: 'linear-gradient(145deg, #fff, #f0f0f0)' }}>
-            <img src={ANIMAL_GIFS[tier]} alt='' className='w-full h-full object-contain' draggable={false} />
+            <img src={getAnimalImage(tier, 'B')} alt='' className='w-full h-full object-contain' draggable={false} />
           </div>
           <span className='text-xs font-bold text-gray-600'>{tier}</span>
         </div>

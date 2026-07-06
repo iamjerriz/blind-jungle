@@ -10,3 +10,17 @@ body {
   padding: 0;
   height: 100%;
 }
+
+@keyframes piece-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-piece-bob {
+  animation: piece-bob 2.6s ease-in-out infinite;
+}
