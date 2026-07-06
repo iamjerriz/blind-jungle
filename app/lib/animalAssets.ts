@@ -16,6 +16,6 @@ const BLUE_ONLY: ReadonlySet<AnimalTier> = new Set([4, 5]);
 
 export function getAnimalImage(tier: AnimalTier, owner: Player): string {
   const key = ANIMAL_KEYS[tier];
-  const variant = owner === 'A' && !BLUE_ONLY.has(tier) ? 'red' : 'blue';
+  const variant = owner === 'B' && !BLUE_ONLY.has(tier) ? 'red' : 'blue';
   return `/animals/${key}${variant}.webp`;
 }

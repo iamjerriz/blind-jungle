@@ -5,6 +5,7 @@ import PlayerPanel from '../PlayerPanel';
 import PieceQueue from '../PieceQueue';
 import { useGameScreen } from './useGameScreen';
 import { PLAYER_NAMES, TOTAL_PIECES } from './constants';
+import { TURN_TIME } from '../../lib/gameLogic';
 
 export default function GameScreen() {
   const {
@@ -24,55 +25,63 @@ export default function GameScreen() {
     resetGame,
   } = useGameScreen();
 
+  const timerPct = (timer / TURN_TIME) * 100;
+  const timerColor = timerPct > 50 ? '#22d3ee' : timerPct > 25 ? '#f59e0b' : '#ef4444';
+  const statusText = message ?? `${PLAYER_NAMES[currentPlayer]}'s turn — flip a tile or move a piece`;
+
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden"
-      style={{
-        background: 'linear-gradient(135deg, #e8d5f5 0%, #c7d7f5 50%, #b8e4f9 100%)',
-      }}
-    >
-      {/* Decorative top ribbon */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-16 rounded-b-full opacity-60"
-        style={{ background: 'linear-gradient(180deg, #6366f1, #8b5cf6)' }}
-      />
-
-      {/* Capture message toast */}
-      {message && (
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 bg-yellow-400 text-yellow-900 font-bold px-6 py-3 rounded-full shadow-lg text-lg animate-bounce">
-          {message}
-        </div>
-      )}
-
+    <div className="bg-cosmic min-h-screen flex flex-col items-center gap-4 p-3 sm:p-5 relative overflow-hidden">
       {/* Game Over overlay */}
       {phase === 'gameover' && (
-        <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div
-            className="bg-white rounded-3xl p-10 flex flex-col items-center gap-6 shadow-2xl"
-            style={{ maxWidth: 360 }}
+            className="rounded-3xl p-10 flex flex-col items-center gap-4 shadow-2xl animate-pop-in border-2"
+            style={{ maxWidth: 380, background: 'linear-gradient(160deg, #0e1730, #0a1120)', borderColor: '#22d3ee' }}
           >
-            <div className="text-5xl">
-              {winner === 'draw' ? '🤝' : '🏆'}
-            </div>
-            <h2 className="text-3xl font-bold text-gray-800">
+            <div className="text-6xl animate-trophy-bounce">{winner === 'draw' ? '🤝' : '🏆'}</div>
+            <h2 className="font-display text-3xl font-extrabold text-white text-center">
               {winner === 'draw' ? "It's a Draw!" : `${PLAYER_NAMES[winner!]} Wins!`}
             </h2>
-            <p className="text-gray-500">
+            <p className="text-slate-400 font-semibold">
               Final score: {piecesA} vs {piecesB} pieces
             </p>
             <button
               onClick={resetGame}
-              className="px-8 py-3 rounded-full font-bold text-white text-lg transition-all hover:scale-105 active:scale-95"
-              style={{ background: 'linear-gradient(90deg, #6366f1, #8b5cf6)' }}
+              className="px-8 py-3 rounded-full font-display font-bold text-white text-lg transition-all hover:scale-105 active:scale-95 shadow-lg"
+              style={{ background: 'linear-gradient(90deg, #0891b2, #22d3ee)' }}
             >
-              Play Again
+              🔁 Play Again
             </button>
           </div>
         </div>
       )}
 
-      {/* Main game layout */}
-      <div className="flex items-start gap-6 mt-8">
+      {/* Top bar */}
+      <div className="w-full max-w-3xl flex items-center justify-between z-10">
+        <button
+          onClick={resetGame}
+          className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+        >
+          [ESC] Give Up
+        </button>
+        <div className="flex items-center gap-2">
+          <button
+            className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-300 border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+            aria-label="Sound"
+          >
+            🔊
+          </button>
+          <button
+            className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-300 border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+            aria-label="Settings"
+          >
+            ⚙️
+          </button>
+        </div>
+      </div>
+
+      {/* Score row */}
+      <div className="w-full max-w-3xl flex items-stretch justify-between gap-2 sm:gap-3 z-10">
         <PlayerPanel
           player="A"
           label={PLAYER_NAMES.A}
@@ -80,16 +89,22 @@ export default function GameScreen() {
           totalPieces={TOTAL_PIECES}
           timeoutRounds={timeoutRounds.A}
           isCurrentPlayer={currentPlayer === 'A'}
-          timer={timer}
         />
 
-        <GameBoard
-          board={board}
-          selectedIndex={selectedIndex}
-          validTargets={validTargets}
-          onTileClick={handleTileClick}
-          remainingTurns={remainingTurns}
-        />
+        <div className="shrink-0 self-center flex flex-col items-center gap-1.5">
+          <div
+            className="px-4 py-2 rounded-2xl font-display font-extrabold text-lg sm:text-xl tabular-nums border-2"
+            style={{ color: timerColor, borderColor: timerColor, background: 'rgba(255,255,255,0.03)' }}
+          >
+            {timer}s
+          </div>
+          <div
+            className="px-3 py-1 rounded-full font-display font-bold text-[10px] sm:text-xs whitespace-nowrap border"
+            style={{ background: 'rgba(34,211,238,0.1)', color: '#67e8f9', borderColor: 'rgba(34,211,238,0.35)' }}
+          >
+            ⏳ Turns Left: {remainingTurns}
+          </div>
+        </div>
 
         <PlayerPanel
           player="B"
@@ -98,12 +113,27 @@ export default function GameScreen() {
           totalPieces={TOTAL_PIECES}
           timeoutRounds={timeoutRounds.B}
           isCurrentPlayer={currentPlayer === 'B'}
-          timer={timer}
         />
       </div>
 
-      <div className="mt-6">
+      {/* Main game layout */}
+      <div className="flex flex-col items-center gap-4 z-10">
+        <GameBoard
+          board={board}
+          selectedIndex={selectedIndex}
+          validTargets={validTargets}
+          onTileClick={handleTileClick}
+        />
+
         <PieceQueue />
+      </div>
+
+      {/* Status / capture log bar */}
+      <div
+        className="w-full max-w-3xl mt-auto rounded-2xl px-4 py-3 text-center z-10 border"
+        style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.1)' }}
+      >
+        <span className={`text-sm font-semibold ${message ? 'text-amber-300' : 'text-slate-400'}`}>{statusText}</span>
       </div>
     </div>
   );
