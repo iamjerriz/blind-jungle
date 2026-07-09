@@ -26,14 +26,14 @@ export default function GameBoard({ board, selectedIndex, validTargets, onTileCl
   return (
     <div className="flex flex-col items-center gap-4">
       <div
-        className="p-4 rounded-3xl border"
+        className="p-4 sm:p-5 md:p-6 rounded-3xl border"
         style={{
           background: 'linear-gradient(160deg, #0a1120, #050810)',
           boxShadow: '0 12px 36px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
           borderColor: 'rgba(255,255,255,0.08)',
         }}
       >
-        <div className="grid grid-cols-4 gap-2.5">
+        <div className="grid grid-cols-4 gap-2.5 sm:gap-3 md:gap-3.5">
           {board.map((tile, i) => (
             <TileCell
               key={i}

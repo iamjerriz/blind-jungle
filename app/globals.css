@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme inline {
+  --font-display: var(--font-baloo);
+  --font-body: var(--font-nunito);
+}
+
 * {
   box-sizing: border-box;
 }

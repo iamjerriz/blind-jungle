@@ -34,12 +34,14 @@ const ARROW_POSITION: Record<Direction, string> = {
   right: 'right-1 top-1/2 -translate-y-1/2',
 };
 
+const SIZE_CLASSES = 'w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32';
+
 export default function TileCell({ tile, isSelected, isValidTarget, incomingDirection, onClick }: Props) {
   if (tile === null) {
     return (
       <button
         onClick={onClick}
-        className="w-20 h-20 rounded-xl border border-dashed border-white/10"
+        className={`${SIZE_CLASSES} rounded-xl border border-dashed border-white/10`}
         style={{ background: 'rgba(255,255,255,0.02)' }}
       />
     );
@@ -50,7 +52,7 @@ export default function TileCell({ tile, isSelected, isValidTarget, incomingDire
       <button
         onClick={onClick}
         className={`
-          w-20 h-20 rounded-xl relative cursor-pointer overflow-hidden
+          ${SIZE_CLASSES} rounded-xl relative cursor-pointer overflow-hidden
           transition-all duration-150 active:scale-95 hover:-translate-y-0.5
           ${isValidTarget ? 'ring-2 ring-cyan-400 animate-glow-pulse-cyan' : ''}
         `}
@@ -64,7 +66,7 @@ export default function TileCell({ tile, isSelected, isValidTarget, incomingDire
           }}
         >
           <div
-            className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-3.5 flex items-center justify-center gap-1"
+            className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-3.5 sm:h-4 md:h-5 flex items-center justify-center gap-1"
             style={{ background: 'linear-gradient(90deg, #6d28d9, #a78bfa, #6d28d9)', boxShadow: '0 0 4px rgba(0,0,0,0.3)' }}
           >
             <span className="w-1 h-1 rounded-full bg-white/80" />
@@ -82,7 +84,7 @@ export default function TileCell({ tile, isSelected, isValidTarget, incomingDire
     <button
       onClick={onClick}
       className={`
-        w-20 h-20 rounded-xl cursor-pointer
+        ${SIZE_CLASSES} rounded-xl cursor-pointer
         transition-all duration-150 active:scale-95 relative overflow-visible
         ${isSelected ? 'ring-2 ring-cyan-300 scale-105' : ''}
         ${isValidTarget ? 'ring-2 ring-cyan-400 animate-glow-pulse-cyan' : ''}
@@ -95,7 +97,7 @@ export default function TileCell({ tile, isSelected, isValidTarget, incomingDire
     >
       {incomingDirection && (
         <span
-          className={`absolute z-10 text-cyan-300 text-sm drop-shadow-[0_0_4px_rgba(34,211,238,0.9)] ${ARROW_POSITION[incomingDirection]} ${ARROW_ANIM[incomingDirection]}`}
+          className={`absolute z-10 text-cyan-300 text-base sm:text-lg drop-shadow-[0_0_4px_rgba(34,211,238,0.9)] ${ARROW_POSITION[incomingDirection]} ${ARROW_ANIM[incomingDirection]}`}
         >
           {ARROW_GLYPH[incomingDirection]}
         </span>
@@ -111,7 +113,7 @@ export default function TileCell({ tile, isSelected, isValidTarget, incomingDire
         draggable={false}
       />
       <div
-        className="absolute top-1 right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white border border-white/40"
+        className="absolute top-1 right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold text-white border border-white/40"
         style={{
           background: badgeColor,
           boxShadow: '0 1px 3px rgba(0,0,0,0.5)',
